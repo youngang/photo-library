@@ -1,4 +1,5 @@
-import { React, ReactDOM } from 'react';
+import { React, Component } from 'react';
+import ReactDOM from "react-dom/client";
 import PropTypes from 'prop-types';
 
 function Image(props) {
@@ -18,7 +19,7 @@ function Image(props) {
     );
 }
 
-export class Gallery extends React.Component {
+export class Gallery extends Component {
 
 constructor(props) {
   // Initialize mutable state
@@ -52,7 +53,7 @@ componentDidMount() {
 }
 
 handler(data) {
-  const { photos } = this.state;
+  const { photos, baseUrl } = this.state;
   //photos.push(data);
   this.setState({
     photos,
@@ -60,7 +61,7 @@ handler(data) {
 }
 
 renderPhoto(i) {
-  const { photos } = this.state;
+  const { photos, baseUrl } = this.state;
   const photoToRender = photos[i];
   return (
     <Image
@@ -81,25 +82,36 @@ render() {
   for (let i = 0; i < photos.length; i += 1) {
     renderedPhotos.push(this.renderPhoto(i));
   }
+
+  //console.log(renderedPhotos);
     // Render number of post image and post owner
     // this.state, this.text.value (params to handleKeyPress)
-    return (
-      { renderedPhotos }
+    return (<div className="container">
+    <div className="header">
+        <h1 className="logo">Gallery</h1>
+        <form>
+            <input type="text" placeholder="Search Images"/>
+            <ion-icon name="search-outline"></ion-icon>
+        </form>
+    </div>
+    <div className="gallery">{renderedPhotos}</div>
+    </div>
     );
   }
  }
 
 Gallery.propTypes = {
   baseUrl: PropTypes.string.isRequired,
+  photos: PropTypes.array.isRequired
 };
 Image.propTypes = {
   authorName: PropTypes.string.isRequired,
   authorUrl: PropTypes.string.isRequired,
   imgUrl: PropTypes.string.isRequired,
-   photoName: PropTypes.string.isRequired
+  photoName: PropTypes.string.isRequired
  };
 
-const gallery = ReactDOM.createRoot(document.getElementById('gallery'));
-gallery.render(<Gallery/>);
+// const gallery = ReactDOM.createRoot(document.getElementById('gallery'));
+// gallery.render(<Gallery/>);
 
 export default Gallery;
