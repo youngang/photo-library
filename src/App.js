@@ -7,11 +7,11 @@ function Image(props) {
     authorName, imgUrl, authorUrl, photoName
   } = props;
   return (
-    <div class="photo">
+    <div className="photo">
       <a href={imgUrl}>
         <img src={imgUrl} alt={photoName}></img>
         <a href={authorUrl}>
-          <h3 class="photographer">{authorName}</h3>
+          <h3 className="photographer">{authorName}</h3>
         </a>
       </a>
     </div>
