@@ -1,17 +1,4 @@
-// import logo from './logo.svg';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="container">
-//       <h1>My app</h1>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-import React from 'react';
+import { React, ReactDOM, Component } from 'react';
 import PropTypes from 'prop-types';
 
 function Image(props) {
@@ -32,12 +19,12 @@ function Image(props) {
   );
 }
 
-export class Gallery extends React.Component {
+export class Gallery extends Component {
 
   constructor(props) {
     // Initialize mutable state
     super(props);
-    this.state = { photos: [], baseUrl: 'https://api.pexels.com/v1/curated?per_page=10'};
+    this.state = { photos: [], baseUrl: ''};
     this.handler = this.handler.bind(this);
   }
 
@@ -102,18 +89,7 @@ export class Gallery extends React.Component {
     // Render number of post image and post owner
     // this.state, this.text.value (params to handleKeyPress)
     return (
-      <div class="container">
-        <div class="header">
-            <h1 class="logo">Gallery</h1>
-            <form>
-                <input type="text" placeholder="Search Images"/>
-                <ion-icon name="search-outline"></ion-icon>
-            </form>
-        </div>
-        <div className="gallery">
-          { renderedPhotos }
-        </div>
-      </div>
+        {renderedPhotos}
     );
   }
 }
@@ -129,5 +105,5 @@ Image.propTypes = {
   photoName: PropTypes.string.isRequired
 };
 
+ReactDOM.render(<Gallery />, document.getElementById('gallery'));
 export default Gallery;
-
