@@ -128,11 +128,15 @@ form ion-icon{
     margin-top: 20px;
   }
   
-.pagination a {
+.pagination button {
     color: black;
-    float: left;
+    justify-content: center;
     padding: 8px 16px;
+    border: none;
     text-decoration: none;
+    font-size: 20px;
+    margin: 10px;
+    background-color: white;
 }
 
 @media only screen and (min-width: 900px){
