@@ -29,6 +29,13 @@ export default function App(){
     setBaseUrl('https://api.pexels.com/v1/curated?page=' + pageNum + '&per_page=10');
   }
 
+  function handleSearch(query){
+    console.log("search time");
+    // console.log("QUERY", query);
+    // console.log("https://api.pexels.com/v1/search?query=" + query + "&per_page=10");
+    setBaseUrl("https://api.pexels.com/v1/search?query=" + query + "&per_page=10");
+  }
+
   useEffect(() => { //sync state with outside API
     async function fetchData(){
       setLoading(true);
@@ -58,7 +65,7 @@ export default function App(){
     <div className="container">
       <div className="header">
         <h1 className="title">Gallery</h1>
-        <SearchBar />
+        <SearchBar onSubmit ={handleSearch}/>
       </div>
       <Gallery images={images} loading={loading} />
       <Pagination 
