@@ -1,14 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 
-function SearchBar() {
-
+export default function SearchBar(props){
+  
     return (
-        <form>
-            <input type="text" placeholder="Search Images"/>
-            <ion-icon name="search-outline"></ion-icon>
-        </form>
-    )
+    <form>
+        <input type="text" placeholder="Search Images"/>
+        <ion-icon name="search-outline"></ion-icon>
+    </form>
+    );
 
 }
-
-export default SearchBar;

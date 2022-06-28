@@ -1,31 +1,22 @@
-import React, { Component } from "react";
+import React from "react";
 
-const Pagination = ({ paginate }) => {
+export default function Pagination(props){
   const pageNumbers = [];
 
-  for (let i = 1; i <= 8; i++) {
+  for (let i = 1; i <= 10; i++) {
     pageNumbers.push(i);
   }
   
     return (
     <div className="pagination">
-        <a><ion-icon name="chevron-back-outline"></ion-icon></a>
+        <button onClick={props.handlePrevPage}><ion-icon name="chevron-back-outline"></ion-icon></button>
         {pageNumbers.map(num => (
-          <a onClick={() => paginate(num)} href='!#' className='page-link'>
+          <button onClick={event => props.handleSpecificPageChange(num)} key={num} className='page-link'>
             {num}
-          </a>
+          </button>
         ))}
-        <a><ion-icon name="chevron-forward-outline"></ion-icon></a>
+        <button onClick={props.handleNextPage}><ion-icon onClick={props.handleNextPage} name="chevron-forward-outline"></ion-icon></button>
     </div>
     );
-  };
 
-  const handlePrevPage = (() => {
-    console.log('hi');
-  });
-
-  const handleNextPage = (() => {
-    console.log('hi');
-  });
-  
-  export default Pagination;
+}

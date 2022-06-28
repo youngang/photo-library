@@ -1,117 +1,71 @@
-import { React, Component } from 'react';
-import ReactDOM from "react-dom/client";
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import Gallery from './components/Gallery';
+import SearchBar from './components/SearchBar';
+import Pagination from './components/Pagination';
 
-function Image(props) {
-// Each individual image
-  const {
-    authorName, imgUrl, authorUrl, photoName
-  } = props;
-  return (
-    <div className="photo">
-      <a href={imgUrl}>
-        <img src={imgUrl} alt={photoName}></img>
-        <a href={authorUrl}>
-          <h3 className="photographer">{authorName}</h3>
-        </a>
-      </a>
-    </div>
-    );
-}
-
-export class Gallery extends Component {
-
-constructor(props) {
-  // Initialize mutable state
-  super(props);
-  this.state = { photos: [], baseUrl: 'https://api.pexels.com/v1/curated?per_page=10'};
-  this.handler = this.handler.bind(this);
-}
-
-componentDidMount() {
-  // This line automatically assigns this.props.url to the const variable url
-  //const { baseUrl } = this.props;
-  const baseUrl = "https://api.pexels.com/v1/curated?per_page=10";
+export default function App(){
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [prevPage, setPrevPage] = useState("");
+  const [nextPage, setNextPage] = useState("");
+  const [baseUrl, setBaseUrl] = useState('https://api.pexels.com/v1/curated?per_page=10');
   const APIKEY = "563492ad6f917000010000011d926482db804d428065948e1fd51837";
-  // Call REST API to get the post's information
-  fetch(baseUrl, { method: 'GET', headers: {Accept: 'application/json', Authorization: APIKEY} })
-    .then((response) => {
-      if (!response.ok) throw Error(response.statusText);
-      return response.json();
-    })
-    .then((data) => {
-      const { photos } = this.state;
-      for (let i = 0; i < data.photos.length; i += 1) {
-        photos.push(data.photos[i]);
-      }
-      this.setState({
-        photos,
-        baseUrl: data.next_page,
-      });
-    })
-    .catch((error) => console.log(error));
-}
 
-handler(data) {
-  const { photos, baseUrl } = this.state;
-  //photos.push(data);
-  this.setState({
-    photos,
-  });
-}
-
-renderPhoto(i) {
-  const { photos, baseUrl } = this.state;
-  const photoToRender = photos[i];
-  return (
-    <Image
-      key = {(photoToRender.id).toString()}
-      authorName = {photoToRender.photographer}
-      imgUrl = {photoToRender.src.original}
-      authorUrl = {photoToRender.photographer_url}
-      photoName = {photoToRender.alt}
-    />
-  );
-}
-
-render() {
-  // This line automatically assigns this.state.imgUrl to the const variable imgUrl
-  // and this.state.owner to the const variable owner
-  const { photos, baseUrl } = this.state;
-  const renderedPhotos = [];
-  for (let i = 0; i < photos.length; i += 1) {
-    renderedPhotos.push(this.renderPhoto(i));
+  function handlePrevPage(){
+    console.log("handle prev page");
+    // console.log('PREV PAGE', prevPage);
+    setBaseUrl(prevPage);
   }
 
-  //console.log(renderedPhotos);
-    // Render number of post image and post owner
-    // this.state, this.text.value (params to handleKeyPress)
-    return (<div className="container">
-    <div className="header">
-        <h1 className="logo">Gallery</h1>
-        <form>
-            <input type="text" placeholder="Search Images"/>
-            <ion-icon name="search-outline"></ion-icon>
-        </form>
-    </div>
-    <div className="gallery">{renderedPhotos}</div>
+  function handleNextPage(){
+    console.log("handle next page");
+    // console.log("NEXT PAGE", nextPage);
+    setBaseUrl(nextPage);
+  }
+
+  function handleSpecificPageChange(pageNum){
+    console.log("handling particular number");
+    // console.log(pageNum);
+    setBaseUrl('https://api.pexels.com/v1/curated?page=' + pageNum + '&per_page=10');
+  }
+
+  useEffect(() => { //sync state with outside API
+    async function fetchData(){
+      setLoading(true);
+      console.log("FETCHING DATA")
+      const res = await fetch(baseUrl, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          Authorization: APIKEY
+        }
+      });
+      const data = await res.json();
+      console.log("DATA", data);
+      setLoading(false);
+      setImages(data.photos);
+      if(data.prev_page){
+        setPrevPage(data.prev_page);
+      }
+      setNextPage(data.next_page);
+    }
+    fetchData();
+    }, [baseUrl]); //useEffect will run every time this variable is changed
+  
+    console.log('images', images);
+
+    return (
+    <div className="container">
+      <div className="header">
+        <h1 className="title">Gallery</h1>
+        <SearchBar />
+      </div>
+      <Gallery images={images} loading={loading} />
+      <Pagination 
+        handlePrevPage={handlePrevPage} 
+        handleNextPage={handleNextPage}
+        handleSpecificPageChange={num => handleSpecificPageChange(num)}
+      />
     </div>
     );
-  }
- }
-
-Gallery.propTypes = {
-  baseUrl: PropTypes.string.isRequired,
-  photos: PropTypes.array.isRequired
-};
-Image.propTypes = {
-  authorName: PropTypes.string.isRequired,
-  authorUrl: PropTypes.string.isRequired,
-  imgUrl: PropTypes.string.isRequired,
-  photoName: PropTypes.string.isRequired
- };
-
-// const gallery = ReactDOM.createRoot(document.getElementById('gallery'));
-// gallery.render(<Gallery/>);
-
-export default Gallery;
+}
