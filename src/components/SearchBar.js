@@ -4,8 +4,8 @@ export default function SearchBar(props){
 
     const [searchQuery, setSearchQuery] = React.useState('');
 
-    function handleChange(event){
-        setSearchQuery(event.target.value);
+    function handleChange(e){
+        setSearchQuery(e.target.value);
     }
 
     function onFormSubmit(e) {
@@ -21,6 +21,3 @@ export default function SearchBar(props){
     );
 
 }
-
-// when the form is submitted, have a handle search function that takes the query as a parameter
-// changes the base url to a search baseurl and returns new image content
