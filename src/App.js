@@ -8,31 +8,23 @@ export default function App(){
   const [loading, setLoading] = useState(true);
   const [prevPage, setPrevPage] = useState("");
   const [nextPage, setNextPage] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [baseUrl, setBaseUrl] = useState('https://api.pexels.com/v1/curated?per_page=10');
   const APIKEY = "563492ad6f917000010000011d926482db804d428065948e1fd51837";
 
   function handlePrevPage(){
-    console.log("handle prev page");
-    // console.log('PREV PAGE', prevPage);
     setBaseUrl(prevPage);
   }
 
   function handleNextPage(){
-    console.log("handle next page");
-    // console.log("NEXT PAGE", nextPage);
     setBaseUrl(nextPage);
   }
 
   function handleSpecificPageChange(pageNum){
-    console.log("handling particular number");
-    // console.log(pageNum);
     setBaseUrl('https://api.pexels.com/v1/curated?page=' + pageNum + '&per_page=10');
   }
 
   function handleSearch(query){
-    console.log("search time");
-    // console.log("QUERY", query);
-    // console.log("https://api.pexels.com/v1/search?query=" + query + "&per_page=10");
     setBaseUrl("https://api.pexels.com/v1/search?query=" + query + "&per_page=10");
   }
 
@@ -48,7 +40,8 @@ export default function App(){
         }
       });
       const data = await res.json();
-      console.log("DATA", data);
+      // console.log("DATA", data);
+      setCurrentPage(data.page);
       setLoading(false);
       setImages(data.photos);
       if(data.prev_page){
@@ -59,16 +52,17 @@ export default function App(){
     fetchData();
     }, [baseUrl]); //useEffect will run every time this variable is changed
   
-    console.log('images', images);
+    // console.log('images', images);
 
     return (
     <div className="container">
       <div className="header">
-        <h1 className="title">Gallery</h1>
+        <h1 className="title">Photo Gallery</h1>
         <SearchBar onSubmit ={handleSearch}/>
       </div>
       <Gallery images={images} loading={loading} />
       <Pagination 
+        currentPage={currentPage}
         handlePrevPage={handlePrevPage} 
         handleNextPage={handleNextPage}
         handleSpecificPageChange={num => handleSpecificPageChange(num)}
